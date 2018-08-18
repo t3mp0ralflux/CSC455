@@ -1,0 +1,35 @@
+1)
+select parts.PNO, pname, price from (orders join odetails on orders.ono=odetails.ono) join parts on odetails.pno = parts.pno;
+2)
+select * from customers where cname like '%ee%'
+3)
+select distinct cname, ename from orders join customers on orders.cno = customers.cno join employees on orders.eno = employees.eno
+4)
+select orders.ono, odetails.pno, pname, qty, price, qty*price as totalprice from (orders join odetails on orders.ono = odetails.ono) join parts on parts.pno=odetails.pno
+5)
+select one.cno, two.cno from customers as one, customers as two where one.cno <> two.cno and one.zip = two.zip
+6)
+select * from(
+select pno, count(pno) as count from orders join odetails on orders.ono=odetails.ono group by pno) as counts
+where count >1
+7)
+select distinct customers.cno, customers.cname from (odetails join orders on odetails.ono=orders.ono) join parts on odetails.pno = parts.pno join customers on orders.cno = customers.cno where pname = 'Dr. Zhivago' or pname='Dirty Harry'
+8)
+select distinct cname from customers join orders on customers.cno = orders.cno join employees on orders.eno = employees.eno where orders.eno = 1000
+9)
+select sum(qty) as total from odetails join orders on odetails.ono = orders.ono where pno = '10601'
+10)
+select orders.ono, SUM(odetails.qty*parts.PRICE) as total from odetails join orders on odetails.ono = orders.ono join parts on odetails.PNO = parts.pno group by orders.ono
+11)
+select city, count(cname) as number from customers join zipcodes on customers.zip = zipcodes.zip group by city
+12)
+select * from parts where price > (select avg(price) from parts)
+13)
+select parts.pno, parts.pname, sum((qty*price)) as total from orders join odetails on orders.ONO = odetails.ono join parts on odetails.pno = parts.pno group by pname order by pno asc
+14)
+select pno, pname, total from(
+select parts.pno, parts.pname, sum(qty*price) as total from orders join odetails on orders.ONO = odetails.ono join parts on odetails.pno = parts.pno group by pname order by pno asc) as parting
+where total >100
+15)
+select orders.ono from orders join odetails on orders.ono = odetails.ono where (shipped-received <=2) group by orders.ono
+

@@ -1,0 +1,24 @@
+instructor :=load "instructor.txt"
+course :=load "course.txt"
+department :=load "department.txt"
+student :=load "student.txt"
+prereq :=load "prereq.txt"
+classroom :=load "classroom.txt"
+teaches :=load "teaches.txt"
+section :=load "section.txt"
+time_slot := load "time_slot.txt"
+advisor := load "advisor.txt"
+
+
+1)project(select instructor where salary>65000)over name, dept_name
+2)project(select instructor join department where building = "Taylor" or building = "Painter") over name
+3)project(select student join takes where course_id="CS-101" and grade = "A")over name
+4)Katz_courses := (project(select(instructor join teaches where name ="Katz")) over course_id, sec_id, semester, year)
+project(student join takes join Katz_courses) over name
+5)project(select(section join time_slot) where ((day="M" or day="W" or day="F") and (semester = "Spring" and year ="2010"))) over course_id
+6)project(select(instructor join (advisor rename (i_id as id)) join (student rename (id as s_id, name as s_name)) where name = "Kim") over s_name)
+7)project(select course join prereq where prereq_id="CS-101")over title
+8)project((select student join takes) where (course_id="FIN-201" and course_id="CS-347"))over name *THIS IS WRONG*
+9)project((select student join takes) where (course_id="FIN-201" or course_id="CS-347"))over name
+10)347diff := project(select student join takes where course_id="CS-347") over name
+project(select student join takes where course_id="CS-101") over name difference 347diff

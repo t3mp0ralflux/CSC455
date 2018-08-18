@@ -1,0 +1,54 @@
+1)
+select distinct customers.cname from orders join customers on orders.cno = customers.cno join employees on orders.eno = employees.eno join zipcodes on employees.zip = zipcodes.zip where zipcodes.city = 'Wichita'
+
+2)
+select distinct customers.CNAME
+ from odetails join orders on odetails.ono = orders.ono join parts on odetails.pno = parts.pno join customers on orders.cno = customers.cno
+where price < 20
+
+3)
+select distinct employees.eno, employees.ename from orders join employees on orders.eno = employees.eno join customers on orders.cno = customers.cno
+where employees.zip <> customers.zip
+
+4)
+select parts.pname, Sum(odetails.qty) as QtySold from orders join odetails on orders.ono = odetails.ono join parts on odetails.pno = parts.pno
+group by odetails.pno
+
+
+5)
+select Avg(SHIPPED-RECEIVED) as AvgWaitTime from orders
+
+6)
+update parts 
+set parts.price = price-(price*0.15) 
+where parts.price > (Select * from (Select Avg(price) from parts) as p)
+
+7)
+delete from parts
+ where pname in(
+select * from(
+select parts.pname 
+from orders join odetails on orders.ono = odetails.ono right join parts on odetails.pno = parts.pno 
+where odetails.ono is null) as p)
+
+8)
+update orders 
+set eno = 1001 
+where eno = 1000
+
+9)
+delete customers 
+from odetails join orders on odetails.ono = orders.ono join customers on orders.cno = customers.cno
+ where customers.cname in(
+Select cname from(
+select orders.RECEIVED, customers.cname, customers.cno, count(cname) as ordercount from odetails join orders on odetails.ono = orders.ono join customers on orders.cno = customers.cno
+group by cname) as loworders 
+where loworders.ordercount <2 AND loworders.RECEIVED < DATE_SUB(now(), INTERVAL 2 YEAR))
+
+10)
+update parts 
+set parts.price = price + (price*0.10)
+ where pno in(
+select * from(
+select odetails.pno from orders join odetails on orders.ono = odetails.ono join parts on parts.pno = odetails.pno
+ where odetails.qty > (Select * from (Select Avg(odetails.qty) from odetails) as avgqty)) as partsavg)
